@@ -1,26 +1,27 @@
 @import "tailwindcss";
 
+html {
+  /* Fuerza el desplazamiento suave al presionar INICIO */
+  scroll-behavior: smooth !important;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Definimos negro puro y blanco */
+  --background: #000000;
+  --foreground: #ffffff;
 }
 
 body {
-  background: var(--background);
+  /* Usamos las variables que definimos arriba */
+  background-color: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+/* Opcional: Esto ayuda a que el fondo negro se vea bien en móviles */
+::selection {
+  background-color: #c5a059;
+  color: #000;
 }

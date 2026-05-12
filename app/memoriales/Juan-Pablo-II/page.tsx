@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 
 import { 
   MapPin, Calendar, Users, Heart, Baby, Quote, 
-  MessageSquare, Camera, Share2, Church, MapPinned, Flame 
+  MessageSquare, Camera, Share2, Church, MapPinned, Flame ,
+  Trash2
 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
   
@@ -71,6 +72,29 @@ const agregarComentario = async () => {
   }
 };
 
+
+const eliminarHomenaje = async (id: number) => {
+  // 1. Pedimos el PIN al usuario
+  const pinIngresado = prompt("Introduce el PIN de administrador para eliminar este mensaje:");
+
+  // 2. Definimos tu PIN secreto (puedes cambiar '1234' por el que quieras)
+  const PIN_SECRETO = "1313";
+
+  if (pinIngresado === PIN_SECRETO) {
+    const { error } = await supabase
+      .from('comentarios')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      alert("Error al eliminar: " + error.message);
+    } else {
+      fetchComentarios(); // Recarga la lista automáticamente
+    }
+  } else if (pinIngresado !== null) {
+    alert("PIN incorrecto. No tienes permiso para eliminar.");
+  }
+};
 
 
 
@@ -303,19 +327,35 @@ const agregarComentario = async () => {
 
                 <div className="space-y-10">
                   {comentarios.map((c, i) => (
-                    <div key={i} className="flex gap-6 items-start border-b border-gray-50 pb-8 last:border-0">
-                      <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold flex-shrink-0">
+                    <div key={i} className="group flex gap-6 items-start border-b border-blue-50 pb-8 last:border-0 relative">
+                      <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                         {c.nombre.substring(0, 2).toUpperCase()}
                       </div>
-                      <div>
-                        <h4 className="text-base font-bold text-gray-900">{c.nombre}</h4>
-                       <p className="text-[11px] text-gray-400 uppercase tracking-widest mb-3">
-                        {new Date(c.created_at).toLocaleDateString('es-ES', 
-                          { day: 'numeric', month: 'long', year: 'numeric' })}</p>
-                        <p className="text-gray-600 italic font-light">"{c.mensaje}"</p>
+                      
+                      <div className="flex-grow">
+                        <div className="flex justify-between items-start">
+                          <h4 className="text-base font-bold text-gray-900 mb-1">{c.nombre}</h4>
+                          
+                          {/* BOTÓN ELIMINAR CON PIN */}
+                          <button 
+                            onClick={() => eliminarHomenaje(c.id)}
+                            className="text-gray-300 hover:text-red-500 transition-colors p-1"
+                            title="Eliminar comentario"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+
+                        <p className="text-[11px] text-gray-400 uppercase tracking-widest mb-4">
+                          {new Date(c.created_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
+                        </p>
+                        <p className="text-gray-600 text-base italic font-light leading-relaxed">
+                          "{c.mensaje}"
+                        </p>
                       </div>
                     </div>
                   ))}
+
                 </div>
               </div>
             )}

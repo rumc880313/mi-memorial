@@ -24,10 +24,19 @@ export default function DetalleJuanPablo() {
   // Guarda la ruta de la foto que se va a ampliar (null significa que está cerrado)
   const [fotoAmpliada, setFotoAmpliada] = useState<string | null>(null);
 
+  // 3. NUEVO: Estado para contar velas encendidas (ejemplo de interacción)
+  const [totalVelas, setTotalVelas] = useState<number>(0);
+  const [encendiendoVela, setEncendiendoVela] = useState<boolean>(false);
+
+
+
+
 
   // 1. Cargar comentarios automáticamente
     useEffect(() => {
       fetchComentarios();
+      fetchVelas(); // 👈 Añade esto para que cargue el número de velas al abrir la página
+
     }, []);
 
     async function fetchComentarios() {
@@ -52,55 +61,81 @@ export default function DetalleJuanPablo() {
 
   ];
 
- // 2. Enviar comentario a Supabase
-const agregarComentario = async () => {
-  if (nuevoNombre.trim() && nuevoTexto.trim()) {
-    const { error } = await supabase
-      .from('comentarios')
-      .insert([
-        { 
-          nombre: nuevoNombre, 
-          mensaje: nuevoTexto, // 👈 Asegúrate de que en Supabase la columna se llame 'mensaje'
-          id_perfil: 1 
-        }
-      ]);
-    
-    if (error) {
-      alert("Error al guardar: " + error.message);
-    } else {
-      fetchComentarios(); // Recarga la lista para mostrar el nuevo mensaje
-      setNuevoNombre('');
-      setNuevoTexto('');
-      setMostrarFormulario(false);
+  // 2. Enviar comentario a Supabase
+  const agregarComentario = async () => {
+    if (nuevoNombre.trim() && nuevoTexto.trim()) {
+      const { error } = await supabase
+        .from('comentarios')
+        .insert([
+          { 
+            nombre: nuevoNombre, 
+            mensaje: nuevoTexto, // 👈 Asegúrate de que en Supabase la columna se llame 'mensaje'
+            id_perfil: 1 
+          }
+        ]);
+      
+      if (error) {
+        alert("Error al guardar: " + error.message);
+      } else {
+        fetchComentarios(); // Recarga la lista para mostrar el nuevo mensaje
+        setNuevoNombre('');
+        setNuevoTexto('');
+        setMostrarFormulario(false);
+      }
+    }
+  };
+
+
+  const eliminarHomenaje = async (id: number) => {
+    // 1. Pedimos el PIN al usuario
+    const pinIngresado = prompt("Introduce el PIN de administrador para eliminar este mensaje:");
+
+    // 2. Definimos tu PIN secreto (puedes cambiar '1234' por el que quieras)
+    const PIN_SECRETO = "1313";
+
+    if (pinIngresado === PIN_SECRETO) {
+      const { error } = await supabase
+        .from('comentarios')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        alert("Error al eliminar: " + error.message);
+      } else {
+        fetchComentarios(); // Recarga la lista automáticamente
+      }
+    } else if (pinIngresado !== null) {
+      alert("PIN incorrecto. No tienes permiso para eliminar.");
+    }
+  };
+
+
+  // Función para contar cuántas velas hay guardadas en la base de datos
+  async function fetchVelas() {
+    const { count, error } = await supabase
+      .from('velas')
+      .select('*', { count: 'exact', head: true })
+      .eq('id_perfil', 1);
+
+    if (!error && count !== null) {
+      setTotalVelas(count);
     }
   }
-};
 
-
-const eliminarHomenaje = async (id: number) => {
-  // 1. Pedimos el PIN al usuario
-  const pinIngresado = prompt("Introduce el PIN de administrador para eliminar este mensaje:");
-
-  // 2. Definimos tu PIN secreto (puedes cambiar '1234' por el que quieras)
-  const PIN_SECRETO = "1313";
-
-  if (pinIngresado === PIN_SECRETO) {
+  // Función para insertar una nueva vela al hacer clic
+  const encenderVelaVirtual = async () => {
+    setEncendiendoVela(true);
     const { error } = await supabase
-      .from('comentarios')
-      .delete()
-      .eq('id', id);
+      .from('velas')
+      .insert([{ id_perfil: 1 }]);
 
-    if (error) {
-      alert("Error al eliminar: " + error.message);
+    if (!error) {
+      await fetchVelas(); // Recarga el contador con la nueva vela incluida
     } else {
-      fetchComentarios(); // Recarga la lista automáticamente
+      alert("Error al encender la vela: " + error.message);
     }
-  } else if (pinIngresado !== null) {
-    alert("PIN incorrecto. No tienes permiso para eliminar.");
-  }
-};
-
-
+    setEncendiendoVela(false);
+  };
 
 
 
@@ -156,6 +191,36 @@ const eliminarHomenaje = async (id: number) => {
                       <Baby size={16} className="text-gray-400"/> 
                       <span><strong>Hijos:</strong> Sin hijos</span>
                     </li>
+
+                        {/* SECCIÓN DE VELAS VIRTUALES (Borde resaltado y vela grande) */}
+                        <div className="mt-8 pt-6 border-t border-gray-100 flex flex-col items-center">
+                          <button
+                            onClick={encenderVelaVirtual}
+                            disabled={encendiendoVela}
+                            className={`flex items-center gap-4 px-8 py-4 rounded-full font-serif text-lg border-2 transition-all duration-300 ${
+                              encendiendoVela 
+                                ? 'bg-amber-50 text-amber-400 border-amber-300 cursor-not-allowed' 
+                                : 'bg-white hover:bg-amber-50/50 text-amber-700 border-amber-400 hover:border-amber-500 shadow-sm hover:shadow-md active:scale-95'
+                            }`}
+                          >
+                            <Flame 
+                              size={26} // Mantenemos tu tamaño de 30 que se ve genial
+                              className={`${encendiendoVela ? 'animate-pulse text-amber-400' : 'text-amber-500 fill-amber-500'}`} 
+                            />
+                            {encendiendoVela ? 'Encendiendo...' : 'Encender una vela virtual'}
+                          </button>
+                          
+                          {/* Texto y vela inferior aumentados de tamaño */}
+                          <p className="text-base text-gray-500 font-light mt-4 tracking-wide flex items-center gap-2">
+                            {/* La clase animate-pulse hace que la vela aumente y disminuya su opacidad imitando el fuego */}
+                            <span className="text-5xl animate-pulse select-none">🕯️</span> 
+                            <span className="font-semibold text-amber-800 text-lg">{totalVelas}</span> {totalVelas === 1 ? 'vela encendida' : 'velas encendidas'} en este homenaje
+                          </p>
+
+                        </div>
+
+
+
                   </ul>
                 </div>
               </div>

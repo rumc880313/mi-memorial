@@ -138,6 +138,17 @@ export default function DetalleJuanPablo() {
   };
 
 
+    // Función para calcular los días de legado de forma automática
+    const calcularDiasLegado = () => {
+    const fechaFallecimiento = new Date("2005-04-02"); // Fecha del Papa (Año-Mes-Día)
+    const fechaActual = new Date();
+    
+    const diferenciaTiempo = fechaActual.getTime() - fechaFallecimiento.getTime();
+    const diferenciaDias = Math.floor(diferenciaTiempo / (1000 * 60 * 60 * 24));
+    
+    return diferenciaDias.toLocaleString('es-MX'); // Formatea el número con comas (ej: 7,711)
+   };
+
 
 
   
@@ -191,6 +202,16 @@ export default function DetalleJuanPablo() {
                       <Baby size={16} className="text-gray-400"/> 
                       <span><strong>Hijos:</strong> Sin hijos</span>
                     </li>
+
+                        {/* CONTADOR DE DÍAS DE LEGADO AUTOMÁTICO */}
+                        <div className="mt-6 pt-4 border-t border-gray-50 text-center">
+                          <p className="text-xs text-gray-400 uppercase tracking-widest mb-1 font-light">
+                            Días de Legado y Recuerdo
+                          </p>
+                          <p className="text-2xl font-serif text-gray-800 font-medium tracking-wide">
+                            ✨ {calcularDiasLegado()} días
+                          </p>
+                        </div>
 
                         {/* SECCIÓN DE VELAS VIRTUALES (Borde resaltado y vela grande) */}
                         <div className="mt-8 pt-6 border-t border-gray-100 flex flex-col items-center">

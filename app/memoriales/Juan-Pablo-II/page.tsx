@@ -377,6 +377,7 @@ const eliminarHomenaje = async (id: number) => {
               </div>
             )}
 
+              /* Cambio para forzar despliegue*/
 
             {/* VISTA: COMPARTIR Y QR */}
             {pestanaActiva === 'compartirqr' && (

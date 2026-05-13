@@ -26,6 +26,7 @@ export default function DetalleJuanPablo() {
 
   // 3. NUEVO: Estado para contar velas encendidas (ejemplo de interacción)
   const [totalVelas, setTotalVelas] = useState<number>(0);
+  const [listaVelas, setListaVelas] = useState<any[]>([]); // 👈 El nuevo estado para las estrellas
   const [encendiendoVela, setEncendiendoVela] = useState<boolean>(false);
 
 
@@ -111,16 +112,20 @@ export default function DetalleJuanPablo() {
 
 
   // Función para contar cuántas velas hay guardadas en la base de datos
-  async function fetchVelas() {
-    const { count, error } = await supabase
-      .from('velas')
-      .select('*', { count: 'exact', head: true })
-      .eq('id_perfil', 1);
+// Creamos un nuevo estado para guardar el arreglo de velas con sus ID reales
 
-    if (!error && count !== null) {
-      setTotalVelas(count);
-    }
+async function fetchVelas() {
+  const { data, error } = await supabase
+    .from('velas')
+    .select('id') // Traemos el ID único de cada vela
+    .eq('id_perfil', 1);
+
+  if (!error && data) {
+    setListaVelas(data);
+    setTotalVelas(data.length); // Mantenemos actualizado tu contador numérico habitual
   }
+}
+
 
   // Función para insertar una nueva vela al hacer clic
   const encenderVelaVirtual = async () => {
@@ -149,6 +154,16 @@ export default function DetalleJuanPablo() {
     return diferenciaDias.toLocaleString('es-MX'); // Formatea el número con comas (ej: 7,711)
    };
 
+
+     // Función para generar una posición aleatoria fija para cada estrella
+      const generarPosicionEstrella = (id: number) => {
+        // Usamos matemáticas simples basadas en el ID para que la estrella 
+        // siempre aparezca en el mismo lugar al recargar la página
+        const x = (id * 73) % 90 + 5; // Porcentaje desde la izquierda (entre 5% y 95%)
+        const y = (id * 37) % 80 + 10; // Porcentaje desde arriba (entre 10% y 90%)
+        const size = (id * 13) % 4 + 3; // Tamaños variados entre 3px y 6px
+        return { left: `${x}%`, top: `${y}%`, width: `${size}px`, height: `${size}px` };
+      };
 
 
   
@@ -213,32 +228,10 @@ export default function DetalleJuanPablo() {
                           </p>
                         </div>
 
-                        {/* SECCIÓN DE VELAS VIRTUALES (Borde resaltado y vela grande) */}
-                        <div className="mt-8 pt-6 border-t border-gray-100 flex flex-col items-center">
-                          <button
-                            onClick={encenderVelaVirtual}
-                            disabled={encendiendoVela}
-                            className={`flex items-center gap-4 px-8 py-4 rounded-full font-serif text-lg border-2 transition-all duration-300 ${
-                              encendiendoVela 
-                                ? 'bg-amber-50 text-amber-400 border-amber-300 cursor-not-allowed' 
-                                : 'bg-white hover:bg-amber-50/50 text-amber-700 border-amber-400 hover:border-amber-500 shadow-sm hover:shadow-md active:scale-95'
-                            }`}
-                          >
-                            <Flame 
-                              size={26} // Mantenemos tu tamaño de 30 que se ve genial
-                              className={`${encendiendoVela ? 'animate-pulse text-amber-400' : 'text-amber-500 fill-amber-500'}`} 
-                            />
-                            {encendiendoVela ? 'Encendiendo...' : 'Encender una vela virtual'}
-                          </button>
-                          
-                          {/* Texto y vela inferior aumentados de tamaño */}
-                          <p className="text-base text-gray-500 font-light mt-4 tracking-wide flex items-center gap-2">
-                            {/* La clase animate-pulse hace que la vela aumente y disminuya su opacidad imitando el fuego */}
-                            <span className="text-5xl animate-pulse select-none">🕯️</span> 
-                            <span className="font-semibold text-amber-800 text-lg">{totalVelas}</span> {totalVelas === 1 ? 'vela encendida' : 'velas encendidas'} en este homenaje
-                          </p>
 
-                        </div>
+
+
+                     
 
 
 
@@ -347,6 +340,70 @@ export default function DetalleJuanPablo() {
                   <p className="text-gray-700 leading-relaxed font-light text-justify">
                     Conocido como San Juan Pablo II, el 'Papa peregrino' dedicó su vida a la paz mundial y la defensa de la dignidad humana. Su liderazgo espiritual y carisma unificaron naciones, dejando un legado eterno de fe y esperanza en la historia de la humanidad. Fue un incansable defensor de los derechos humanos y un puente entre diferentes culturas y religiones.
                   </p>
+                </div>
+
+
+                <div className="bg-white p-10 rounded-sm shadow-sm border border-gray-200">
+                  <h2 className="text-xl font-serif text-gray-900 mb-6 border-b pb-4 tracking-wider uppercase">Muro de Luces de Esperanza</h2>
+   
+                    {/* SECCIÓN COMPLETA DE VELAS VIRTUALES Y MURO DE LUCES */}
+                      <div className="mt-4 pt-2 border-t border-gray-100 flex flex-col items-center w-full">
+                        
+                          <p className="text-gray-700 leading-relaxed font-light text-justify">
+                          Cada vez que enciendes una vela, se enciende un destello en el cielo de este homenaje simbolizando luz de esperanza y recuerdo. ¡Únete y deja tu huella de amor eterno!                        
+
+                          </p>
+                          
+                          {/* Contenedor Oscuro (Simulación de cielo nocturno) */}
+                          <div className="w-full h-48 bg-gradient-to-b from-gray-950 to-slate-900 rounded-sm relative overflow-hidden border border-gray-800 shadow-inner mb-6">
+                            
+                            {/* Dibuja las estrellas reales leyendo los IDs de Supabase */}
+                            {listaVelas.map((vela) => {
+                              const pos = generarPosicionEstrella(vela.id);
+                              return (
+                                <div
+                                  key={vela.id}
+                                  style={pos}
+                                  className="absolute bg-amber-300 rounded-full shadow-[0_0_10px_#fcd34d] animate-pulse duration-1000"
+                                />
+                              );
+                            })}
+
+                            {/* Mensaje decorativo de fondo cuando el contador esté en 0 */}
+                            {totalVelas === 0 && (
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <p className="text-xs text-gray-600 italic font-light">
+                                  El cielo está esperando tu luz...
+                                </p>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* El botón de interactuar (El mismo de antes con tamaño 28 y 4xl) */}
+                          <button
+                            onClick={encenderVelaVirtual}
+                            disabled={encendiendoVela}
+                            className={`flex items-center gap-4 px-8 py-4 rounded-full font-serif text-lg border-2 transition-all duration-300 ${
+                              encendiendoVela 
+                                ? 'bg-amber-50 text-amber-400 border-amber-300 cursor-not-allowed' 
+                                : 'bg-white hover:bg-amber-50/50 text-amber-700 border-amber-400 hover:border-amber-500 shadow-sm hover:shadow-md active:scale-95'
+                            }`}
+                          >
+                            <Flame 
+                              size={28} 
+                              className={`${encendiendoVela ? 'animate-pulse text-amber-400' : 'text-amber-500 fill-amber-500'}`} 
+                            />
+                            {encendiendoVela ? 'Encendiendo...' : 'Encender una vela virtual'}
+                          </button>
+                          
+                          {/* El contador numérico inferior */}
+                          <p className="text-base text-gray-500 font-light mt-4 tracking-wide flex items-center gap-2">
+                            <span className="text-4xl animate-pulse select-none">🕯️</span> 
+                            <span className="font-semibold text-amber-800 text-lg">{totalVelas}</span> {totalVelas === 1 ? 'vela encendida' : 'velas encendidas'} en este homenaje
+                          </p>
+
+                      </div>
+
                 </div>
 
             </div>

@@ -63,7 +63,7 @@ export default function Memoriales() {
                     href={m.nombre === "Karol Józef Wojtyła" ? "/memoriales/Juan-Pablo-II" : "/memoriales/Madre-Teresa"}
                     className="pt-8 text-[10px] tracking-[0.4em] text-[#c5a059] flex items-center justify-center md:justify-start hover:text-white transition-colors cursor-pointer"
                     >
-                    <Heart size={12} className="mr-2" /> VER HOMENAJE COMPLETO
+                    <Heart size={12} className="mr-2" /> VER HOMENAJE COMPLETO.
                     </Link>
 
                 </div>

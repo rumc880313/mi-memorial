@@ -302,7 +302,7 @@ const eliminarHomenaje = async (id: number) => {
                     onClick={() => setMostrarFormulario(!mostrarFormulario)}
                     className="bg-blue-600 text-white px-6 py-2 rounded-md text-sm hover:bg-blue-700 transition-all"
                   >
-                    {mostrarFormulario ? 'Cancelar' : 'Añadir un comentario'}
+                    {mostrarFormulario ? 'Cancelar' : 'Añadir un comentario.'}
                   </button>
                 </div>
 

@@ -53,10 +53,10 @@ export default function DetalleJuanPablo() {
 
   // Fotos de ejemplo del Papa
   const fotosGaleria = [
-    "/Memoriales/Daniel-Ruiz/DR1.jpeg",
-    "/Memoriales/Daniel-Ruiz/DR2.jpeg",
-    "/Memoriales/Daniel-Ruiz/DR3.jpeg",
-    "/Memoriales/Daniel-Ruiz/DR4.jpeg",
+    "/memoriales/Daniel-Ruiz/DR1.jpeg",
+    "/memoriales/Daniel-Ruiz/DR2.jpeg",
+    "/memoriales/Daniel-Ruiz/DR3.jpeg",
+    "/memoriales/Daniel-Ruiz/DR4.jpeg",
  
 
   ];

@@ -336,7 +336,7 @@ async function fetchVelas() {
                 <div className="bg-white p-10 rounded-sm shadow-sm border border-gray-200">
                   <h2 className="text-xl font-serif text-gray-900 mb-6 border-b pb-4 tracking-wider uppercase">Obituario</h2>
                   <p className="text-gray-700 leading-relaxed font-light text-justify">
-                    Enrique, licenciado en administración de empresas por el ITC, conocido por el gusto en la política, vivió su infacia en Juventino Rosas. Cuando término su carrera trabajó como administrador de la central camionera de Juventino Rosas por 10 años, en ese lapso se casó y se mudó a Celaya. Posterior al trabajo de Juventino, trabajó en la central camionera de Celaya por 9 años. En los últimos 13 años trabajó en los edificios Aries en Celaya con la Sra. Teresa de Usabiaga.
+                    Enrique, licenciado en administración de empresas por el ITC, conocido por el gusto en la política, vivió su infancia en Juventino Rosas. Cuando terminó su carrera trabajó como administrador de la central camionera de Juventino Rosas por 10 años, en ese lapso se casó con Margarita Saldaña y se mudó a Celaya. Posterior al trabajo de administrador de la central de Juventino, trabajó por 9 años en la central camionera de Celaya. En los últimos 13 años trabajó en los edificios Aries en Celaya con la Sra. Teresa de Usabiaga.
                   </p>
                 </div>
 

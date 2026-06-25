@@ -37,7 +37,7 @@ export default function Contacto() {
               <div>
                 <h3 className="text-[#e2d1a4] text-xs tracking-[0.3em] uppercase mb-3">Correo Electrónico</h3>
                 <p className="text-gray-300 font-light text-lg tracking-wide hover:text-white transition-colors cursor-pointer">
-                  ventas@recuerdos.com
+                  recuerdosjr13@gmail.com
                 </p>
               </div>
             </div>
@@ -47,7 +47,7 @@ export default function Contacto() {
               <div>
                 <h3 className="text-[#e2d1a4] text-xs tracking-[0.3em] uppercase mb-3">Teléfono / WhatsApp</h3>
                 <p className="text-gray-300 font-light text-lg tracking-wide">
-                  +52 (412) 110 32 32
+                  +52 (412) 110 32 12
                 </p>
               </div>
             </div>
@@ -72,7 +72,7 @@ export default function Contacto() {
                 <h3 className="text-[#e2d1a4] text-xs tracking-[0.3em] uppercase mb-3">Nuestra Comunidad</h3>
                 <div className="flex space-x-8 mt-2">
                   <span className="text-gray-400 hover:text-white text-xs tracking-widest cursor-pointer transition-colors uppercase">Instagram</span>
-                  <span className="text-gray-400 hover:text-white text-xs tracking-widest cursor-pointer transition-colors uppercase">Facebook</span>
+                  <a href="https://www.facebook.com/share/18zEqJu7Sd/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white text-xs tracking-widest cursor-pointer transition-colors uppercase">Facebook</a>
                 </div>
               </div>
             </div>
